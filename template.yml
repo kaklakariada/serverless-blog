@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Serverless blog
+Resources:
+  GetFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: com.github.kaklakariada.blog.handler.PostCommentHandler
+      Runtime: java8
+      CodeUri: ${CodeUri}
+      Events:
+        PostComment:
+          Type: Api
+          Properties:
+            Path: /blogpost/{id}/comment
+            Method: post
+
+
+  BlogPostCommentTable: 
+    Type: "AWS::DynamoDB::Table"
+    Properties: 
+      AttributeDefinitions: 
+        - 
+          AttributeName: CommentId
+          AttributeType: S
+        - 
+          AttributeName: BlogPostId
+          AttributeType: S
+      KeySchema: 
+        - 
+          AttributeName: CommentId
+          KeyType: HASH
+        - 
+          AttributeName: BlogPostId
+          KeyType: RANGE
+      ProvisionedThroughput: 
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      TableName: "${stage}_blogpostcomments"
