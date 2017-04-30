@@ -1,8 +1,36 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: Serverless blog
+
 Resources:
-  GetFunction:
+  ApiGatewayApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: ${stage}
+      Variables:
+        stage: ${stage}
+      DefinitionBody:
+        swagger: '2.0'
+        info:
+          title:
+            Ref: AWS::StackName
+          description: |
+            A serverless blog using aws-lambda-request-handler
+        paths:
+          /blogpost/{id}/comment:
+            post:
+              description: Post a blog comment
+              responses:
+                default:
+                  statusCode: 200
+              x-amazon-apigateway-integration:
+                passthroughBehavior: when_no_match
+                httpMethod: POST
+                type: aws_proxy
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${PostCommentLambda.Arn}/invocations
+
+  PostCommentLambda:
     Type: AWS::Serverless::Function
     Properties:
       Handler: com.github.kaklakariada.blog.handler.PostCommentHandler
@@ -12,8 +40,9 @@ Resources:
         PostComment:
           Type: Api
           Properties:
+            RestApiId: !Ref ApiGatewayApi
             Path: /blogpost/{id}/comment
-            Method: post
+            Method: POST
 
 
   BlogPostCommentTable: 
@@ -37,3 +66,10 @@ Resources:
         ReadCapacityUnits: 1
         WriteCapacityUnits: 1
       TableName: "${stage}_blogpostcomments"
+            
+Outputs:
+  ApiUrl:
+    Description: API endpoint URL
+    Value: !Sub https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/${stage}
+
+
