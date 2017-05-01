@@ -1,7 +1,8 @@
 plugins {
     id 'java'
-    id 'com.github.kaklakariada.aws-sam-deploy' version '0.2.0'
 }
+
+apply plugin: 'com.github.kaklakariada.aws-sam-deploy'
 
 repositories {
     jcenter()
@@ -10,14 +11,14 @@ repositories {
 version = '0.0.1'
 
 ext {
-    awsSdkVersion = '1.11.73'
+    awsSdkVersion = '1.11.125'
 }
 
 serverless {
     currentStage = "test"
-    defaultAwsProfile = 'default'
-    defaultAwsRegion = awsregion
-    defaultDeploymentBucket = binarybucket
+    defaultAwsProfile = awsProfile
+    defaultAwsRegion = awsRegion
+    defaultDeploymentBucket = awsDeploymentBucket
     stages {
         test {
         }
@@ -25,7 +26,7 @@ serverless {
         }
     }
     api {
-        stackName = project.name
+        stackName = "${project.name}-${deployStage}"
         samTemplate = file('template.yml')
     }
 }

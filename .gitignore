@@ -5,3 +5,5 @@
 /.project
 /.settings/org.eclipse.buildship.core.prefs
 /gradle.properties
+/buildSrc/.gradle/
+/buildSrc/build/

@@ -1,2 +1,3 @@
-binarybucket = <bucket>
-awsregion = <region>
+binaryBucket = <bucket>
+awsRegion = <region>
+awsProfile = <profile>
