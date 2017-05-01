@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig.TableNameOverride;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.github.kaklakariada.aws.lambda.LambdaRequestHandler;
 import com.github.kaklakariada.aws.lambda.request.ApiGatewayRequest;
@@ -25,12 +27,24 @@ public class PostCommentHandler extends LambdaRequestHandler<BlogPostComment, Vo
 		LOG.info("Request: {}", request);
 		LOG.info("Body: {}", body);
 
-		final AmazonDynamoDB dynamoDB = AmazonDynamoDBClient.builder().build();
-		final DynamoDBMapper dbMapper = new DynamoDBMapper(dynamoDB);
+		final DynamoDBMapper dbMapper = createDbMapper(request);
 		final int blogPostId = 42;
 		final BlogPostCommentDynamoDb entry = new BlogPostCommentDynamoDb(blogPostId, body);
 		dbMapper.save(entry);
 		LOG.info("New db entry: {}", entry);
 		return null;
+	}
+
+	private DynamoDBMapper createDbMapper(ApiGatewayRequest request) {
+		final AmazonDynamoDB dynamoDB = AmazonDynamoDBClient.builder().build();
+		final String tableNamePrefix = request.getRequestContext().getStage() + "_";
+		LOG.info("Using table prefix {}", tableNamePrefix);
+		final DynamoDBMapperConfig config = getMapperConfig(tableNamePrefix);
+		return new DynamoDBMapper(dynamoDB, config);
+	}
+
+	private DynamoDBMapperConfig getMapperConfig(String tableNamePrefix) {
+		return DynamoDBMapperConfig.builder()
+				.withTableNameOverride(TableNameOverride.withTableNamePrefix(tableNamePrefix)).build();
 	}
 }
