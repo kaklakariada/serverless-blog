@@ -36,6 +36,8 @@ Resources:
       Handler: com.github.kaklakariada.blog.handler.PostCommentHandler
       Runtime: java8
       CodeUri: ${CodeUri}
+      MemorySize: 512
+      Timeout: 30
       Events:
         PostComment:
           Type: Api
