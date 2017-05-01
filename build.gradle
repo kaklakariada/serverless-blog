@@ -12,19 +12,21 @@ version = '0.0.1'
 
 ext {
     awsSdkVersion = '1.11.125'
+    deployStage = 'test'
 }
 
 serverless {
-    currentStage = "test"
-    defaultAwsProfile = awsProfile
+
+    currentStage = deployStage
+    defaultAwsProfile = deployAwsProfile
     defaultAwsRegion = awsRegion
     defaultDeploymentBucket = awsDeploymentBucket
+    
     stages {
         test {
         }
-        prelive {
-        }
     }
+
     api {
         stackName = "${project.name}-${deployStage}"
         samTemplate = file('template.yml')

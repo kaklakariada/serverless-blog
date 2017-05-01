@@ -1,3 +1,3 @@
-binaryBucket = <bucket>
+awsDeploymentBucket = <bucket>
 awsRegion = <region>
-awsProfile = <profile>
+deployAwsProfile = <profile>
