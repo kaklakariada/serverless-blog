@@ -38,13 +38,15 @@ Resources:
       CodeUri: ${CodeUri}
       MemorySize: 512
       Timeout: 30
-      Policies: 
-        Statement:
-          - Effect: Allow
-            Action: dynamodb:PutItem
-            Resource: !Sub
-              - arn:aws:dynamodb:${AWS::Region}::table/${Table}
-              - { Table: !Ref BlogPostCommentTable }
+      Policies:
+        - AWSLambdaExecute
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action: dynamodb:PutItem
+              Resource: !Sub
+                - arn:aws:dynamodb:${AWS::Region}::table/${Table}
+                - { Table: !Ref BlogPostCommentTable }
       Events:
         PostComment:
           Type: Api
