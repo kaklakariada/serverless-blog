@@ -12,19 +12,19 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.github.kaklakariada.aws.lambda.LambdaRequestHandler;
 import com.github.kaklakariada.aws.lambda.controller.LambdaController;
 import com.github.kaklakariada.aws.lambda.controller.RequestHandlerMethod;
-import com.github.kaklakariada.aws.lambda.request.ApiGatewayRequest;
+import com.github.kaklakariada.aws.lambda.model.request.ApiGatewayRequest;
 import com.github.kaklakariada.blog.model.BlogPostComment;
 import com.github.kaklakariada.blog.model.BlogPostCommentDynamoDb;
 
-public class PostCommentHandler extends LambdaRequestHandler<BlogPostComment, Void> {
+public class PostCommentHandler extends LambdaRequestHandler {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PostCommentHandler.class);
 
 	public PostCommentHandler() {
-		super(new Controller(), BlogPostComment.class, Void.class);
+		super(new Controller());
 	}
 
-	private static class Controller implements LambdaController<BlogPostComment, Void> {
+	private static class Controller implements LambdaController {
 		@RequestHandlerMethod
 		public Void handleRequest(ApiGatewayRequest request, BlogPostComment body, Context context) {
 			LOG.info("Request: {}", request);

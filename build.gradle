@@ -11,16 +11,15 @@ repositories {
 version = '0.0.1'
 
 ext {
-    awsSdkVersion = '1.11.136'
+    awsSdkVersion = '1.11.315'
     deployStage = 'test'
 }
 
 serverless {
-
-    currentStage = deployStage
+    activeStage = deployStage
     defaultAwsProfile = deployAwsProfile
     defaultAwsRegion = awsRegion
-    defaultDeploymentBucket = awsDeploymentBucket
+    defaultDeployBucket = awsDeploymentBucket
     
     stages {
         test {
@@ -35,7 +34,7 @@ serverless {
 
 dependencies {
     compile 'com.github.kaklakariada:aws-lambda-request-handler:0.0.1'
-    compile 'com.amazonaws:aws-lambda-java-core:1.1.0'
+    compile 'com.amazonaws:aws-lambda-java-core:1.2.0'
     compile 'org.slf4j:slf4j-api:1.7.25'
     compile "com.amazonaws:aws-java-sdk-dynamodb:$awsSdkVersion"
 
